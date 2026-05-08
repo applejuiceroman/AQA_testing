@@ -17,7 +17,7 @@ public class Main {
         arrayInversion();
         arrayFilling();
         squareArray();
-        int[] array1 = createArray(5, 10);
+        int[] array1 = createArray(9, 10);
         System.out.println(Arrays.toString(array1));
 
     }
