@@ -26,27 +26,27 @@ public class Main {
     public static void printThreeWords() {
         System.out.println("Orange");
         System.out.println("Banana");
-        System.out.println("Apple");
+        System.out.println("Apple\n");
     }
 
     public static void checkSumSign() {
         int a = 5;
         int b = -55;
         if (a + b >= 0) {
-            System.out.println("Сумма положительная");
+            System.out.println("Сумма положительная\n");
         } else {
-            System.out.println("Сумма отрицательная");
+            System.out.println("Сумма отрицательная\n");
         }
     }
 
     public static void printColor() {
         int a = 255;
         if (a <= 0) {
-            System.out.println("Красный");
+            System.out.println("Красный\n");
         } else if (a <= 100) {
-            System.out.println("Жёлтый");
+            System.out.println("Жёлтый\n");
         } else {
-            System.out.println("Зелёный");
+            System.out.println("Зелёный\n");
         }
     }
 
@@ -54,9 +54,9 @@ public class Main {
         int a = 14;
         int b = 20;
         if (a >= b) {
-            System.out.println("a >= b");
+            System.out.println("a >= b\n");
         } else {
-            System.out.println("a < b");
+            System.out.println("a < b\n");
         }
     }
 
@@ -70,13 +70,16 @@ public class Main {
     }
 
     public static boolean returnBool(int digit) {
+        System.out.println("\n");
         return digit < 0;
     }
 
     public static void printMultipleStrings(String str, int count) {
+        System.out.println("\n");
         for (int i = 0; i < count; i++) {
             System.out.println(str);
         }
+        System.out.println("\n");
     }
 
     public static boolean isYearLeap(int year) {
@@ -101,7 +104,7 @@ public class Main {
                 arr[i] = 0;
             }
         }
-        System.out.println("Массив после замены:" + Arrays.toString(arr));
+        System.out.println("\nМассив после замены:" + Arrays.toString(arr) + "\n");
     }
 
     public static void arrayFilling() {
@@ -118,7 +121,7 @@ public class Main {
                 arr[i] = arr[i] * 2;
             }
         }
-        System.out.println("Массив после умножения элементов на 2:" + Arrays.toString(arr));
+        System.out.println("Массив после умножения элементов на 2:" + Arrays.toString(arr) + "\n");
     }
 
     public static void squareArray() {
@@ -134,6 +137,7 @@ public class Main {
     }
 
     public static int[] createArray(int len, int initialValue) {
+        System.out.println("\n");
         int[] array = new int[len];
         for (int i = 0; i < len; i++) {
             array[i] = initialValue;
