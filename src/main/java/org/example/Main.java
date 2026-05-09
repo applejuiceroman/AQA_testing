@@ -11,7 +11,7 @@ public class Main {
         printColor();
         compareNumbers();
         System.out.println(sumInRange(2, 7));
-        System.out.println(returnBool( -232));
+        System.out.println(returnBool(-232));
         printMultipleStrings("Несколько строк", 4);
         System.out.println(isYearLeap(100));
         arrayInversion();
@@ -34,8 +34,7 @@ public class Main {
         int b = -55;
         if (a + b >= 0) {
             System.out.println("Сумма положительная");
-        }
-        else {
+        } else {
             System.out.println("Сумма отрицательная");
         }
     }
@@ -44,11 +43,9 @@ public class Main {
         int a = 255;
         if (a <= 0) {
             System.out.println("Красный");
-        }
-        else if (a <= 100) {
+        } else if (a <= 100) {
             System.out.println("Жёлтый");
-        }
-        else {
+        } else {
             System.out.println("Зелёный");
         }
     }
@@ -58,8 +55,7 @@ public class Main {
         int b = 20;
         if (a >= b) {
             System.out.println("a >= b");
-        }
-        else {
+        } else {
             System.out.println("a < b");
         }
     }
@@ -68,8 +64,7 @@ public class Main {
         int sum = a + b;
         if (sum >= 10 && sum <= 20) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -99,7 +94,6 @@ public class Main {
 
     public static void arrayInversion() {
         int[] arr = {1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0};
-        System.out.println("Исходный массив:" + Arrays.toString(arr));
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] == 0) {
                 arr[i] = 1;
@@ -111,9 +105,9 @@ public class Main {
     }
 
     public static void arrayFilling() {
-        int [] arr = new int [100];
+        int[] arr = new int[100];
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = i +1;
+            arr[i] = i + 1;
         }
     }
 
@@ -122,9 +116,9 @@ public class Main {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] < 6) {
                 arr[i] = arr[i] * 2;
-                }
             }
         }
+        System.out.println("Массив после умножения элементов на 2:" + Arrays.toString(arr));
     }
 
     public static void squareArray() {
