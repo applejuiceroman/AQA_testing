@@ -16,6 +16,7 @@ public class Main {
         System.out.println(isYearLeap(100));
         arrayInversion();
         arrayFilling();
+        multiplyByTwo();
         squareArray();
         int[] array1 = createArray(9, 10);
         System.out.println(Arrays.toString(array1));
@@ -113,6 +114,16 @@ public class Main {
         int [] arr = new int [100];
         for (int i = 0; i < arr.length; i++) {
             arr[i] = i +1;
+        }
+    }
+
+    public static void multiplyByTwo() {
+        int[] arr = {1, 5, 3, 2, 11, 4, 5, 2, 4, 8, 9, 1};
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] < 6) {
+                arr[i] = arr[i] * 2;
+                }
+            }
         }
     }
 
