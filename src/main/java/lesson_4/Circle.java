@@ -2,13 +2,11 @@ package lesson_4;
 
 public class Circle implements Shape {
     private double radius;
-    private String fillColor;
-    private String borderColor;
+    private Color color;
 
     public Circle(double radius, String fillColor, String borderColor) {
         this.radius = radius;
-        this.fillColor = fillColor;
-        this.borderColor = borderColor;
+        this.color = new Color (fillColor, borderColor);
     }
 
     @Override
@@ -23,11 +21,11 @@ public class Circle implements Shape {
 
     @Override
     public String getFillColor() {
-        return fillColor;
+        return color.fillColor;
     }
 
     @Override
     public String getBorderColor() {
-        return borderColor;
+        return color.borderColor;
     }
 }
