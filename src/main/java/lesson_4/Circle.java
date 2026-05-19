@@ -20,9 +20,7 @@ public class Circle implements Shape {
     }
 
     @Override
-    public String getFillColor() {
-        return color.fillColor;
-    }
+    public String getFillColor() { return color.fillColor; }
 
     @Override
     public String getBorderColor() {

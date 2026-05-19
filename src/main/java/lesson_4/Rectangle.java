@@ -3,14 +3,12 @@ package lesson_4;
 public class Rectangle implements Shape {
     private double width;
     private double height;
-    private String fillColor;
-    private String borderColor;
+    private Color color;
 
     public Rectangle(double width, double height, String fillColor, String borderColor) {
         this.width = width;
         this.height = height;
-        this.fillColor = fillColor;
-        this.borderColor = borderColor;
+        this.color = new Color (fillColor, borderColor);
     }
 
     @Override
@@ -25,11 +23,11 @@ public class Rectangle implements Shape {
 
     @Override
     public String getFillColor() {
-        return fillColor;
+        return color.fillColor;
     }
 
     @Override
     public String getBorderColor() {
-        return borderColor;
+        return color.borderColor;
     }
 }
