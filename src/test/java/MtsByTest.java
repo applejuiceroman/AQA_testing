@@ -6,15 +6,18 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.*;
+
+import java.time.Duration;
 
 public class MtsByTest extends BaseTest {
     private WebDriver driver = SeleniumDriver.getInstance();
 
     @BeforeEach
-    public void homePage() throws InterruptedException {
+    public void homePage() {
         driver.get("https://www.mts.by");
-        Thread.sleep(500);//Без таймера окно куки не успевает появиться, в результате провал теста
-        driver.findElement(By.id("cookie-agree")).click();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(By.id("cookie-agree"))).click();
     }
 
     @Test
@@ -59,11 +62,9 @@ public class MtsByTest extends BaseTest {
         connectionSum.sendKeys("5");
         connectionMail.sendKeys("email@mail.ru");
         driver.findElement(By.xpath("//form[@class='pay-form opened']/button[@class='button button__default ' and @type='submit']")).click();
-        Thread.sleep(1000);
 
-        By paymentContinueFrame = By.xpath("//iframe[@class='payment-widget-iframe']");
-        WebElement paymentContinueFrameOpened = driver.findElement(paymentContinueFrame);
-        Assertions.assertTrue(paymentContinueFrameOpened.isDisplayed());
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//iframe[@class='payment-widget-iframe']")));
         Thread.sleep(2000);
     }
 }
