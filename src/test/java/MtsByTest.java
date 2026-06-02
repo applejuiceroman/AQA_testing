@@ -9,6 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.*;
 
 import java.time.Duration;
+import java.util.List;
 
 public class MtsByTest extends BaseTest {
     private WebDriver driver = SeleniumDriver.getInstance();
@@ -16,8 +17,12 @@ public class MtsByTest extends BaseTest {
     @BeforeEach
     public void homePage() {
         driver.get("https://www.mts.by");
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("cookie-agree"))).click();
+        List<WebElement> cookieButtons = driver.findElements(By.xpath("//div[@class='cookie__wrapper']//button[text()='Отклонить']"));
+        if (!cookieButtons.isEmpty() && cookieButtons.get(0).isDisplayed()) {
+            cookieButtons.get(0).click();
+        }
+        //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        //wait.until(ExpectedConditions.elementToBeClickable(By.id("cookie-agree"))).click();
     }
 
     @Test
