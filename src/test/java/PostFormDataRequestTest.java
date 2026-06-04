@@ -20,7 +20,7 @@ public class PostFormDataRequestTest {
     }
 
     @Test
-    @DisplayName("POST form-data")
+    @DisplayName("POST form-data test")
     public void postFormDataTest() {
         Map<String, String> formData = new HashMap<>();
         formData.put("firstName", "Ivan");

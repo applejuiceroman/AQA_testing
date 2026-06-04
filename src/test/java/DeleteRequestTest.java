@@ -17,16 +17,12 @@ public class DeleteRequestTest {
     }
 
     @Test
-    @DisplayName("DELETE text/plain запрос - проверка кода ответа и отправленного текста")
+    @DisplayName("DELETE text/plain test")
     public void deleteTextPlainTest() {
-        // Текст, который мы отправим в теле DELETE запроса
         String textToSend = "Text for DELETE method to work with";
 
-        System.out.println("📤 Отправляем DELETE запрос с типом text/plain:");
-        System.out.println("Текст: " + textToSend);
-        System.out.println();
+        System.out.println("Текст для отправки: " + textToSend);
 
-        // 1. Выполняем DELETE запрос с text/plain
         Response response = given()
                 .header("Content-Type", "text/plain")
                 .body(textToSend)

@@ -8,6 +8,7 @@ import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("GET")
 public class GetRequestTest {
 
     @BeforeAll
@@ -16,7 +17,7 @@ public class GetRequestTest {
     }
 
     @Test
-    @DisplayName("GET")
+    @DisplayName("GET test")
     public void testGetRequestWithParameters() {
         Response response = given()
                 .queryParam("foo1", "bar1")

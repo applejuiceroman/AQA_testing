@@ -17,7 +17,7 @@ public class PutRequestTest {
     }
 
     @Test
-    @DisplayName("PUT text/plain")
+    @DisplayName("PUT text/plain test")
     public void putTextPlainTest() {
         String textToSend = "PUT text/plain";
 

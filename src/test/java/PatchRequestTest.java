@@ -17,7 +17,7 @@ public class PatchRequestTest {
     }
 
     @Test
-    @DisplayName("PATCH text/plain")
+    @DisplayName("PATCH text/plain test")
     public void patchTextPlainTest() {
         String textToSend = "PATCH text/plain text";
 

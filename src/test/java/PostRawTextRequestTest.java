@@ -17,7 +17,7 @@ public class PostRawTextRequestTest {
     }
 
     @Test
-    @DisplayName("POST raw text")
+    @DisplayName("POST raw text test")
     public void postRawTextTest() {
         String textToSend = "POST raw text test";
 
