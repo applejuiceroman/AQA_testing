@@ -1,4 +1,4 @@
-import lesson_9.SeleniumDriver;
+import lesson_10.driver.SeleniumDriver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +11,7 @@ import org.openqa.selenium.support.ui.*;
 import java.time.Duration;
 import java.util.List;
 
-public class MtsByTest extends BaseTest {
+public class MtsByMainPageTest extends BasicTest {
     private WebDriver driver = SeleniumDriver.getInstance();
 
     @BeforeEach
