@@ -16,7 +16,7 @@ public class PostFormDataRequestTest {
 
     @BeforeAll
     public static void setUp() {
-        RestAssured.baseURI = "https://postman-echo.com/post";
+        RestAssured.baseURI = "https://postman-echo.com";
     }
 
     @Test
@@ -48,7 +48,7 @@ public class PostFormDataRequestTest {
                 .isNotNull()
                 .containsEntry("firstName", "Ivan")
                 .containsEntry("lastName", "Ivanov")
-                .containsEntry("email", "ivan@ivan.com")
+                .containsEntry("email", "ivan@ivanmail.com")
                 .containsEntry("age", "41")
                 .containsEntry("city", "Ivanovo");
 
