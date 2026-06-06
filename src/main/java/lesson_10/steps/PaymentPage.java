@@ -3,123 +3,131 @@ package lesson_10.steps;
 import lesson_10.pages.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PaymentPage extends BasePage {
 
-    // Поля ввода для услуги связи
-    @FindBy(xpath = "//form[contains(@class, 'pay-form')]//input[@id='connection-phone']")
-    private WebElement phoneInput;
+    private final By phoneInput = By.xpath("//input[@id='connection-phone'] | //input[contains(@placeholder, 'Номер')]");
+    private final By sumInput = By.xpath("//input[@id='connection-sum'] | //input[contains(@placeholder, 'Сумма')]");
+    private final By emailInput = By.xpath("//input[@id='connection-email'] | //input[contains(@placeholder, 'Email')]");
+    private final By continueButton = By.xpath("//button[contains(text(), 'Продолжить')]");
+    private final By paymentFrame = By.xpath("//iframe[contains(@class, 'payment-widget-iframe')]");
 
-    @FindBy(xpath = "//form[contains(@class, 'pay-form')]//input[@id='connection-sum']")
-    private WebElement sumInput;
+    private final By frameAmount = By.xpath("//div[contains(@class, 'pay-description__cost')]");
+    private final By framePhoneNumber = By.xpath("//div[contains(@class, 'pay-description__text')]");
+    private final By framePayButton = By.xpath("//button[contains(@type, 'submit')]");
 
-    @FindBy(xpath = "//form[contains(@class, 'pay-form')]//input[@id='connection-email']")
-    private WebElement emailInput;
+    private final By frameCardNumberInput = By.xpath("//label[@class='ng-tns-c2312288139-2 ng-star-inserted']");
+    private final By frameCardExpiryInput = By.xpath("//label[@class='ng-tns-c2312288139-4 ng-star-inserted']");
+    private final By frameCardCvvInput = By.xpath("//label[@class='ng-tns-c2312288139-5 ng-star-inserted']");
+    private final By frameCardholderNameInput = By.xpath("//label[@class='ng-tns-c2312288139-3 ng-star-inserted']");
 
-    // Кнопка "Продолжить"
-    @FindBy(xpath = "//form[contains(@class, 'pay-form')]//button[@type='submit']")
-    private WebElement continueButton;
+    private final By visaIcon = By.xpath("//img[contains(@src, 'visa')]");
+    private final By mastercardIcon = By.xpath("//img[contains(@src, 'mastercard')]");
+    private final By belkartIcon = By.xpath("//img[contains(@src, 'belkart')]");
+    private final By maestromirIcon = By.xpath("//img[contains(@src, 'maestro')] | //img[contains(@src, 'mir')]");
 
-    // Платежный фрейм
-    private final By paymentFrame = By.xpath("//iframe[contains(@class, 'app-wrapper__content ng-tns-c107495084-0')]");
+    public boolean areAllPaymentIconsDisplayed() {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1));
 
-    // Элементы внутри платежного фрейма
-    private final By frameAmount = By.xpath("//span[contains(@class, 'amount')]");
-    private final By framePhoneNumber = By.xpath("//span[contains(@class, 'phone')]");
-    private final By frameCardNumberInput = By.xpath("//input[@placeholder='Номер карты']");
-    private final By frameCardExpiryInput = By.xpath("//input[@placeholder='Срок действия']");
-    private final By frameCardCvvInput = By.xpath("//input[@placeholder='CVC']");
-    private final By frameCardholderNameInput = By.xpath("//input[@placeholder='Имя держателя (как на карте)']");
-    private final By framePaymentSystems = By.xpath("//img[contains(@src, 'visa') or contains(@src, 'mastercard') or contains(@src, 'belkart')]");
-    private final By framePayButton = By.xpath("//button[contains(text(), 'Оплатить')]");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(visaIcon));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(mastercardIcon));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(belkartIcon));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(maestromirIcon));
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     public PaymentPage() {
         super();
     }
 
-    // Заполнить номер телефона
     public void enterPhoneNumber(String phone) {
-        wait.until(ExpectedConditions.visibilityOf(phoneInput));
-        phoneInput.clear();
-        phoneInput.sendKeys(phone);
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(phoneInput));
+        element.clear();
+        element.sendKeys(phone);
     }
 
-    // Заполнить сумму
     public void enterAmount(String amount) {
-        sumInput.clear();
-        sumInput.sendKeys(amount);
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(sumInput));
+        element.clear();
+        element.sendKeys(amount);
     }
 
-    // Заполнить email
     public void enterEmail(String email) {
-        emailInput.clear();
-        emailInput.sendKeys(email);
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(emailInput));
+        element.clear();
+        element.sendKeys(email);
     }
 
-    // Заполнить форму для услуги связи
     public void fillCommunicationForm(String phone, String amount, String email) {
         enterPhoneNumber(phone);
         enterAmount(amount);
         enterEmail(email);
     }
 
-    // Нажать кнопку "Продолжить"
     public void clickContinueButton() {
-        continueButton.click();
+        wait.until(ExpectedConditions.elementToBeClickable(continueButton)).click();
     }
-
-    // Переключиться на платежный фрейм
-    public void switchToPaymentFrame() {
-        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(paymentFrame));
-    }
-
-    // Переключиться обратно на основной контент
-    public void switchToDefaultContent() {
-        driver.switchTo().defaultContent();
-    }
-
-    // Получить сумму из платежного фрейма
-    public String getAmountFromFrame() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(frameAmount));
-        return driver.findElement(frameAmount).getText();
-    }
-
-    // Получить номер телефона из платежного фрейма
-    public String getPhoneNumberFromFrame() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(framePhoneNumber));
-        return driver.findElement(framePhoneNumber).getText();
-    }
-
-    // Получить сумму на кнопке "Оплатить"
-    public String getAmountOnPayButton() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(framePayButton));
-        return driver.findElement(framePayButton).getText();
-    }
-
-    // Получить все плейсхолдеры полей ввода карты
-    public List<String> getCardInputPlaceholders() {
-        By[] inputLocators = {frameCardNumberInput, frameCardExpiryInput, frameCardCvvInput, frameCardholderNameInput};
-        return List.of(inputLocators).stream()
-                .map(locator -> driver.findElement(locator).getAttribute("placeholder"))
-                .toList();
-    }
-
-    // Проверить наличие иконок платежных систем
-    public boolean arePaymentSystemIconsDisplayed() {
-        List<WebElement> icons = driver.findElements(framePaymentSystems);
-        return icons.size() >= 3; // Visa, Mastercard, Белкарт
-    }
-
-    // Дождаться появления платежного фрейма
     public boolean waitForPaymentFrame(int seconds) {
         try {
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(paymentFrame));
             return true;
         } catch (Exception e) {
+            System.out.println("Платёжное окно не найдено: " + e.getMessage());
             return false;
         }
+    }
+
+    public void switchToDefaultContent() {
+        driver.switchTo().defaultContent();
+    }
+
+    public String getAmountFromFrame() {
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(frameAmount));
+        return element.getText();
+    }
+
+    public String getPhoneNumberFromFrame() {
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(framePhoneNumber));
+        String fullText = element.getText();
+
+        Pattern pattern = Pattern.compile("375\\d{9}");
+        Matcher matcher = pattern.matcher(fullText.replaceAll("\\s", ""));
+
+        if (matcher.find()) {
+            return matcher.group();
+        }
+
+        throw new RuntimeException("Не удалось извлечь номер телефона из текста: " + fullText);
+    }
+
+    public String getAmountOnPayButton() {
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(framePayButton));
+        return element.getText();
+    }
+
+    public List<String> getCardInputPlaceholders() {
+        List<By> locators = List.of(frameCardNumberInput, frameCardExpiryInput, frameCardCvvInput, frameCardholderNameInput);
+
+        return locators.stream()
+                .map(locator -> {
+                    try {
+                        return driver.findElement(locator).getText();
+                    } catch (Exception e) {
+                        return "не найден";
+                    }
+                })
+                .toList();
     }
 }

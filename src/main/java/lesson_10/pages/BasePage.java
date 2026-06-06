@@ -7,9 +7,9 @@ import lesson_10.driver.SeleniumDriver;
 
 import java.time.Duration;
 
-public abstract class BasePage {
-    protected WebDriver driver;
-    protected WebDriverWait wait;
+public class BasePage {
+    public WebDriver driver;
+    public WebDriverWait wait;
 
     public BasePage() {
         this.driver = SeleniumDriver.getInstance();
