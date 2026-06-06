@@ -12,6 +12,7 @@ public class BasicTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         SeleniumDriver.setOptions(options);
+        SeleniumDriver.getInstance();
     }
 
     @AfterAll

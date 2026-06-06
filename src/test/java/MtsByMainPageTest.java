@@ -1,75 +1,123 @@
-import lesson_10.driver.SeleniumDriver;
-import org.junit.jupiter.api.Assertions;
+import lesson_10.pages.HomePage;
+import lesson_10.steps.PaymentPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.*;
 
-import java.time.Duration;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MtsByMainPageTest extends BasicTest {
-    private WebDriver driver = SeleniumDriver.getInstance();
+
+    private HomePage homePage;
+    private PaymentPage paymentPage;
+
+    // Тестовые данные
+    private static final String TEST_PHONE = "297777777";
+    private static final String TEST_AMOUNT = "5";
+    private static final String TEST_EMAIL = "email@mail.ru";
 
     @BeforeEach
     public void homePage() {
-        driver.get("https://www.mts.by");
-        List<WebElement> cookieButtons = driver.findElements(By.xpath("//div[@class='cookie__wrapper']//button[text()='Отклонить']"));
-        if (!cookieButtons.isEmpty() && cookieButtons.get(0).isDisplayed()) {
-            cookieButtons.get(0).click();
+        homePage = new HomePage();
+        paymentPage = new PaymentPage();
+
+        homePage.open();
+        homePage.declineCookiesIfPresent();
+    }
+
+    // ==================== ТЕСТ 1 ====================
+    @Test
+    @DisplayName("1. Проверка надписей в незаполненных полях каждого варианта оплаты")
+    public void checkPlaceholdersForAllServices() {
+        Map<String, List<String>> servicePlaceholders = homePage.getAllServicePlaceholders();
+
+        System.out.println("=== Проверка плейсхолдеров для всех услуг ===\n");
+
+        for (Map.Entry<String, List<String>> entry : servicePlaceholders.entrySet()) {
+            String serviceName = entry.getKey();
+            List<String> placeholders = entry.getValue();
+
+            System.out.println("📌 Услуга: " + serviceName);
+            System.out.println("   Надписи в полях:");
+
+            assertNotNull(placeholders, "Плейсхолдеры не должны быть null для услуги: " + serviceName);
+            assertFalse(placeholders.isEmpty(), "Должны быть поля для заполнения для услуги: " + serviceName);
+
+            for (String placeholder : placeholders) {
+                System.out.println("      - " + placeholder);
+                assertNotNull(placeholder, "Плейсхолдер не должен быть null");
+                assertFalse(placeholder.isEmpty(), "Плейсхолдер не должен быть пустым");
+            }
+            System.out.println();
         }
-        //WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        //wait.until(ExpectedConditions.elementToBeClickable(By.id("cookie-agree"))).click();
     }
 
+    // ==================== ТЕСТ 2 ====================
     @Test
-    @DisplayName("Проверка названия блока платежей")
-    public void sectionTitleCheck() {
-        WebElement title = driver.findElement(By.xpath("//section[@class='pay']//h2"));
-        Assertions.assertEquals("Онлайн пополнение\nбез комиссии", title.getText());
-    }
+    @DisplayName("2. Заполнение формы «Услуги связи» и проверка данных в платежном окне")
+    public void checkPaymentFrameForCommunicationService() {
+        // 2.1 Выбираем услугу связи
+        homePage.selectServiceTab("Услуги связи");
 
-    @Test
-    @DisplayName("Проверка наличия логотипов платёжных систем")
-    public void paymentSystemLogosCheck() {
-        By visaLogo = By.xpath("//img[contains(@alt, 'Visa') or contains(@alt, 'Verified By Visa')]");
-        By mastercardLogo = By.xpath("//img[contains(@src, 'MasterCard') or contains(@alt, 'MasterCard Secure Code')]");
-        By belkartLogo = By.xpath("//img[contains(@alt, 'Белкарт')]");
+        // 2.2 Заполняем поля
+        paymentPage.fillCommunicationForm(TEST_PHONE, TEST_AMOUNT, TEST_EMAIL);
 
-        WebElement visa = driver.findElement(visaLogo);
-        Assertions.assertTrue(visa.isDisplayed());
+        // 2.3 Нажимаем кнопку "Продолжить"
+        paymentPage.clickContinueButton();
 
-        WebElement mastercard = driver.findElement(mastercardLogo);
-        Assertions.assertTrue(mastercard.isDisplayed());
+        // 2.4 Проверяем, что появился платежный фрейм
+        boolean framePresent = paymentPage.waitForPaymentFrame(5);
+        assertTrue(framePresent, "Платежный фрейм не появился");
 
-        WebElement belkart = driver.findElement(belkartLogo);
-        Assertions.assertTrue(belkart.isDisplayed());
-    }
+        // 2.5 Переключаемся во фрейм
+        paymentPage.switchToPaymentFrame();
 
-    @Test
-    @DisplayName("Проверка работы ссылки «Подробнее о сервисе»")
-    public void serviceDetailsCheck() {
-        driver.findElement(By.xpath("//div[@class='pay__wrapper']/a[@href='/help/poryadok-oplaty-i-bezopasnost-internet-platezhey/']")).click();
-        driver.findElement(By.xpath("//body")).isDisplayed();
-    }
+        System.out.println("\n=== Проверка данных в платежном окне ===\n");
 
-    @Test
-    @DisplayName("Заполнение полей и проверка работы кнопки «Продолжить»")
-    public void fieldsFillingContinueCheck() throws InterruptedException {
-        WebElement connectionPhone = driver.findElement(By.xpath("//section[@class='pay']//input[@id='connection-phone']"));
-        WebElement connectionSum = driver.findElement(By.xpath("//section[@class='pay']//input[@id='connection-sum']"));
-        WebElement connectionMail = driver.findElement(By.xpath("//section[@class='pay']//input[@id='connection-email']"));
+        // 2.6 Проверка корректности отображения суммы
+        String amountInFrame = paymentPage.getAmountFromFrame();
+        System.out.println("💰 Сумма в окне: " + amountInFrame);
+        assertNotNull(amountInFrame, "Сумма должна отображаться");
+        assertTrue(amountInFrame.contains(TEST_AMOUNT),
+                "Сумма в окне должна содержать " + TEST_AMOUNT + ", актуально: " + amountInFrame);
 
-        connectionPhone.sendKeys("297777777");
-        connectionSum.sendKeys("5");
-        connectionMail.sendKeys("email@mail.ru");
-        driver.findElement(By.xpath("//form[@class='pay-form opened']/button[@class='button button__default ' and @type='submit']")).click();
+        // 2.7 Проверка номера телефона
+        String phoneInFrame = paymentPage.getPhoneNumberFromFrame();
+        System.out.println("📞 Номер телефона: " + phoneInFrame);
+        assertNotNull(phoneInFrame, "Номер телефона должен отображаться");
+        assertTrue(phoneInFrame.contains(TEST_PHONE),
+                "Номер телефона должен содержать " + TEST_PHONE + ", актуально: " + phoneInFrame);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//iframe[@class='payment-widget-iframe']")));
-        Thread.sleep(2000);
+        // 2.8 Проверка суммы на кнопке "Оплатить"
+        String amountOnButton = paymentPage.getAmountOnPayButton();
+        System.out.println("🔘 Кнопка: " + amountOnButton);
+        assertNotNull(amountOnButton, "На кнопке должна быть сумма");
+        assertTrue(amountOnButton.contains(TEST_AMOUNT),
+                "На кнопке должна быть сумма " + TEST_AMOUNT + ", актуально: " + amountOnButton);
+
+        // 2.9 Проверка надписей в незаполненных полях для ввода реквизитов карты
+        List<String> cardInputPlaceholders = paymentPage.getCardInputPlaceholders();
+        System.out.println("\n💳 Надписи в полях для ввода карты:");
+
+        String[] expectedPlaceholders = {"Номер карты", "Срок действия", "CVC", "Имя держателя (как на карте)"};
+
+        for (int i = 0; i < cardInputPlaceholders.size(); i++) {
+            System.out.println("   - " + cardInputPlaceholders.get(i));
+            assertEquals(expectedPlaceholders[i], cardInputPlaceholders.get(i),
+                    "Плейсхолдер должен быть: " + expectedPlaceholders[i]);
+        }
+
+        // 2.10 Проверка наличия иконок платёжных систем
+        boolean iconsPresent = paymentPage.arePaymentSystemIconsDisplayed();
+        System.out.println("\n🏦 Иконки платежных систем: " + (iconsPresent ? "присутствуют" : "отсутствуют"));
+        assertTrue(iconsPresent, "Иконки платежных систем (Visa, Mastercard, Белкарт) должны отображаться");
+
+        // 2.11 Возвращаемся к основному контенту
+        paymentPage.switchToDefaultContent();
+
+        System.out.println("\n✅ Все проверки успешно пройдены!");
     }
 }
