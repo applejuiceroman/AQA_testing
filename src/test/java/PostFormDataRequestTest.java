@@ -30,7 +30,7 @@ public class PostFormDataRequestTest {
         formData.put("city", "Ivanovo");
 
         Response response = given()
-                .contentType("application/x-www-form-urlencoded")
+                .contentType("application/x-www-form-urlencoded; charset=UTF-8")
                 .formParams(formData)
                 .when()
                 .post("/post")
