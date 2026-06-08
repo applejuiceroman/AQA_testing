@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class HomePage extends BasePage {
 
     public void declineCookiesIfPresent() {
         try {
-            List<WebElement> declineButtons = driver.findElements(By.xpath("//button[contains(text(), 'Отклонить')]"));
+            List<WebElement> declineButtons = driver.findElements(By.xpath("//button[@class='btn btn_gray cookie__cancel']"));
             if (!declineButtons.isEmpty() && declineButtons.get(0).isDisplayed()) {
                 declineButtons.get(0).click();
                 return;
@@ -62,15 +63,13 @@ public class HomePage extends BasePage {
             WebElement selectField = wait.until(ExpectedConditions.elementToBeClickable(serviceSelectField));
             selectField.click();
 
-            Thread.sleep(500);
-
             By optionLocator = serviceOptionLocators.get(serviceName);
 
-
-            WebElement option = wait.until(ExpectedConditions.elementToBeClickable(optionLocator));
+            WebElement option = wait.until(ExpectedConditions.visibilityOfElementLocated(optionLocator));
+            wait.until(ExpectedConditions.elementToBeClickable(option));
             option.click();
 
-            Thread.sleep(500);
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(optionLocator));
 
         } catch (Exception e) {
             throw new RuntimeException("Не удалось выбрать услугу: " + serviceName, e);
@@ -104,15 +103,13 @@ public class HomePage extends BasePage {
         for (String service : services) {
             try {
                 selectService(service);
-                Thread.sleep(1000);
                 List<String> placeholders = getPlaceholdersForCurrentService();
                 servicePlaceholders.put(service, placeholders);
             } catch (Exception e) {
-                System.out.println("❌ Ошибка при загрузке плейсхолдеров для: " + service);
+                System.out.println("Ошибка при загрузке плейсхолдеров для: " + service);
                 servicePlaceholders.put(service, List.of("Ошибка загрузки"));
             }
         }
-
         return servicePlaceholders;
     }
 }

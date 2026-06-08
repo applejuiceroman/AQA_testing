@@ -79,6 +79,7 @@ public class PaymentPage extends BasePage {
     public void clickContinueButton() {
         wait.until(ExpectedConditions.elementToBeClickable(continueButton)).click();
     }
+
     public boolean waitForPaymentFrame(int seconds) {
         try {
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(paymentFrame));
