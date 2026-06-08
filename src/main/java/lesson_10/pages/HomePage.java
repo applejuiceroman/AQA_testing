@@ -2,10 +2,8 @@ package lesson_10.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,15 +39,15 @@ public class HomePage extends BasePage {
 
     public void declineCookiesIfPresent() {
         try {
-            List<WebElement> declineButtons = driver.findElements(By.xpath("//button[@class='btn btn_gray cookie__cancel']"));
-            if (!declineButtons.isEmpty() && declineButtons.get(0).isDisplayed()) {
-                declineButtons.get(0).click();
+            WebElement declineButton = driver.findElement(By.xpath("//button[@class='btn btn_gray cookie__cancel']"));
+            if (declineButton.isDisplayed()) {
+                declineButton.click();
                 return;
             }
 
-            List<WebElement> agreeButtons = driver.findElements(By.id("cookie-agree"));
-            if (!agreeButtons.isEmpty() && agreeButtons.get(0).isDisplayed()) {
-                agreeButtons.get(0).click();
+            WebElement agreeButton = driver.findElement(By.id("cookie-agree"));
+            if (!agreeButton.isDisplayed()) {
+                agreeButton.click();
             }
         } catch (Exception e) {
             System.out.println("Окно куки не появилось или уже обработано");
