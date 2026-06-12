@@ -1,11 +1,16 @@
 import lesson_11.pages.HomePage;
 import lesson_11.steps.PaymentPage;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +22,24 @@ public class MtsByMainPageTest extends BasicTest {
     private static final String TEST_PHONE = "297777777";
     private static final String TEST_AMOUNT = "5";
     private static final String TEST_EMAIL = "email@mail.ru";
+
+    @BeforeAll
+    public static void createEnvironmentFile() {
+        Properties props = new Properties();
+        props.setProperty("Browser", "Chrome 149.0.7827.115");
+        props.setProperty("Environment", "https://www.mts.by");
+        props.setProperty("OS", System.getProperty("os.name"));
+        props.setProperty("Java Version", System.getProperty("java.version"));
+
+        String path = System.getProperty("user.dir") + "/target/allure-results/";
+        new File(path).mkdirs();
+
+        try (FileOutputStream fos = new FileOutputStream(path + "environment.properties")) {
+            props.store(fos, "Allure Environment Properties");
+        } catch (IOException e) {
+            System.err.println("Не удалось создать файл окружения: " + e.getMessage());
+        }
+    }
 
     @BeforeEach
     public void setUpPage() {
